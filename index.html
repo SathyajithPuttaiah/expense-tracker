@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#4F46E5">
+  <title>TripSplit — Expense Tracker</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%234F46E5' width='100' height='100' rx='20'/><text y='70' x='50' text-anchor='middle' font-size='55'>💰</text></svg>">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+
+    <!-- ========== SETUP SCREEN ========== -->
+    <div id="setup-screen" class="screen active">
+      <div class="setup-container">
+        <div class="setup-logo">💰</div>
+        <h1 class="setup-title">TripSplit</h1>
+        <p class="setup-subtitle">Track shared trip expenses effortlessly</p>
+
+        <div class="setup-tabs">
+          <button class="setup-tab active" data-tab="create">New Trip</button>
+          <button class="setup-tab" data-tab="join">Join Trip</button>
+        </div>
+
+        <div id="create-tab" class="tab-content active">
+          <div class="form-group">
+            <label for="trip-name">Trip Name</label>
+            <input type="text" id="trip-name" placeholder="e.g. Delhi Adventure" autocomplete="off">
+          </div>
+          <div class="form-group">
+            <label for="create-user-name">Your Name</label>
+            <input type="text" id="create-user-name" placeholder="e.g. Rahul" autocomplete="off">
+          </div>
+          <div class="form-group">
+            <label for="partner-name">Partner's Name</label>
+            <input type="text" id="partner-name" placeholder="e.g. Priya" autocomplete="off">
+          </div>
+          <div class="form-group">
+            <label for="trip-budget">Budget (optional)</label>
+            <input type="number" id="trip-budget" placeholder="e.g. 50000" inputmode="numeric">
+          </div>
+          <button id="btn-create-trip" class="btn-primary">Create Trip</button>
+        </div>
+
+        <div id="join-tab" class="tab-content">
+          <div class="form-group">
+            <label for="join-trip-code">Trip Code</label>
+            <input type="text" id="join-trip-code" placeholder="Enter 6-character code" maxlength="6" autocomplete="off" style="text-transform: uppercase; letter-spacing: 4px; text-align: center; font-size: 1.3rem;">
+          </div>
+          <div class="form-group">
+            <label for="join-user-name">Your Name</label>
+            <input type="text" id="join-user-name" placeholder="e.g. Priya" autocomplete="off">
+          </div>
+          <button id="btn-join-trip" class="btn-primary">Join Trip</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== MAIN APP ========== -->
+    <div id="main-app" class="hidden">
+
+      <!-- Top Header -->
+      <header id="app-header">
+        <div class="header-left">
+          <h2 id="header-trip-name">Trip</h2>
+          <span id="header-trip-code" class="trip-code-badge"></span>
+        </div>
+        <button id="btn-settings" class="icon-btn" aria-label="Settings">⚙️</button>
+      </header>
+
+      <!-- ===== HOME VIEW ===== -->
+      <div id="view-home" class="view active">
+        <div class="view-content">
+          <div class="summary-cards">
+            <div class="summary-card total">
+              <span class="card-label">Total Spent</span>
+              <span id="total-spent" class="card-value">₹0</span>
+              <div id="budget-bar-container" class="budget-bar-container hidden">
+                <div class="budget-bar">
+                  <div id="budget-fill" class="budget-fill"></div>
+                </div>
+                <span id="budget-text" class="budget-text"></span>
+              </div>
+            </div>
+            <div class="summary-row">
+              <div class="summary-card person">
+                <span id="person1-name" class="card-label">You</span>
+                <span id="person1-total" class="card-value small">₹0</span>
+              </div>
+              <div class="summary-card person">
+                <span id="person2-name" class="card-label">Partner</span>
+                <span id="person2-total" class="card-value small">₹0</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="section-header">
+              <h3>Today's Expenses</h3>
+              <span id="today-total" class="section-badge">₹0</span>
+            </div>
+            <div id="today-expenses-list" class="expense-list">
+              <div class="empty-state">No expenses today. Tap + to add one!</div>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="section-header">
+              <h3>Recent</h3>
+            </div>
+            <div id="recent-expenses-list" class="expense-list">
+              <div class="empty-state">No expenses yet.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== ADD EXPENSE VIEW ===== -->
+      <div id="view-add" class="view">
+        <div class="view-content">
+          <h3 class="view-title">Add Expense</h3>
+
+          <div class="amount-input-container">
+            <span class="currency-symbol">₹</span>
+            <input type="number" id="expense-amount" class="amount-input" placeholder="0" inputmode="decimal" step="0.01">
+          </div>
+
+          <div class="form-group">
+            <label>Category</label>
+            <div class="category-grid" id="category-grid">
+              <button class="category-btn selected" data-category="transport">
+                <span class="cat-icon">🚕</span>
+                <span class="cat-label">Transport</span>
+              </button>
+              <button class="category-btn" data-category="food">
+                <span class="cat-icon">🍽️</span>
+                <span class="cat-label">Food</span>
+              </button>
+              <button class="category-btn" data-category="hotel">
+                <span class="cat-icon">🏨</span>
+                <span class="cat-label">Hotel</span>
+              </button>
+              <button class="category-btn" data-category="sightseeing">
+                <span class="cat-icon">🎟️</span>
+                <span class="cat-label">Sightseeing</span>
+              </button>
+              <button class="category-btn" data-category="shopping">
+                <span class="cat-icon">🛍️</span>
+                <span class="cat-label">Shopping</span>
+              </button>
+              <button class="category-btn" data-category="other">
+                <span class="cat-icon">📦</span>
+                <span class="cat-label">Other</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="expense-desc">Description</label>
+            <input type="text" id="expense-desc" placeholder="e.g. Auto to Red Fort" autocomplete="off">
+          </div>
+
+          <div class="form-group">
+            <label>Paid By</label>
+            <div class="toggle-group" id="paid-by-toggle">
+              <button class="toggle-btn active" data-person="person1" id="toggle-person1">You</button>
+              <button class="toggle-btn" data-person="person2" id="toggle-person2">Partner</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="expense-date">Date</label>
+            <input type="date" id="expense-date">
+          </div>
+
+          <button id="btn-save-expense" class="btn-primary btn-large">Save Expense</button>
+        </div>
+      </div>
+
+      <!-- ===== HISTORY VIEW ===== -->
+      <div id="view-history" class="view">
+        <div class="view-content">
+          <h3 class="view-title">All Expenses</h3>
+
+          <div class="filter-bar">
+            <select id="filter-category" class="filter-select">
+              <option value="all">All Categories</option>
+              <option value="transport">🚕 Transport</option>
+              <option value="food">🍽️ Food</option>
+              <option value="hotel">🏨 Hotel</option>
+              <option value="sightseeing">🎟️ Sightseeing</option>
+              <option value="shopping">🛍️ Shopping</option>
+              <option value="other">📦 Other</option>
+            </select>
+            <select id="filter-person" class="filter-select">
+              <option value="all">Everyone</option>
+            </select>
+          </div>
+
+          <div id="history-list" class="expense-list">
+            <div class="empty-state">No expenses recorded yet.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== CHARTS VIEW ===== -->
+      <div id="view-charts" class="view">
+        <div class="view-content">
+          <h3 class="view-title">Expense Analytics</h3>
+
+          <div class="chart-card">
+            <h4>By Category</h4>
+            <div class="chart-container">
+              <canvas id="chart-category"></canvas>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <h4>Daily Spending</h4>
+            <div class="chart-container chart-wide">
+              <canvas id="chart-daily"></canvas>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <h4>Who Spent More?</h4>
+            <div class="chart-container">
+              <canvas id="chart-person"></canvas>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <h4>Category × Person</h4>
+            <div class="chart-container chart-wide">
+              <canvas id="chart-category-person"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Navigation -->
+      <nav id="bottom-nav">
+        <button class="nav-btn active" data-view="home">
+          <span class="nav-icon">🏠</span>
+          <span class="nav-label">Home</span>
+        </button>
+        <button class="nav-btn" data-view="add">
+          <span class="nav-icon add-icon">＋</span>
+          <span class="nav-label">Add</span>
+        </button>
+        <button class="nav-btn" data-view="history">
+          <span class="nav-icon">📋</span>
+          <span class="nav-label">History</span>
+        </button>
+        <button class="nav-btn" data-view="charts">
+          <span class="nav-icon">📊</span>
+          <span class="nav-label">Charts</span>
+        </button>
+      </nav>
+    </div>
+
+    <!-- ===== SETTINGS MODAL ===== -->
+    <div id="settings-modal" class="modal hidden">
+      <div class="modal-overlay"></div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Settings</h3>
+          <button class="icon-btn modal-close" aria-label="Close">✕</button>
+        </div>
+        <div class="modal-body">
+          <div class="setting-item">
+            <span class="setting-label">Trip Code</span>
+            <div class="setting-value">
+              <span id="settings-trip-code" class="code-display"></span>
+              <button id="btn-copy-code" class="btn-small">Copy</button>
+            </div>
+          </div>
+          <div class="setting-item">
+            <span class="setting-label">Trip Name</span>
+            <span id="settings-trip-name" class="setting-value"></span>
+          </div>
+          <div class="setting-item">
+            <span class="setting-label">Your Name</span>
+            <span id="settings-user-name" class="setting-value"></span>
+          </div>
+          <div class="setting-item">
+            <span class="setting-label">Members</span>
+            <span id="settings-members" class="setting-value"></span>
+          </div>
+          <hr>
+          <button id="btn-export" class="btn-secondary">📤 Export Data (JSON)</button>
+          <button id="btn-leave-trip" class="btn-danger">Leave Trip</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== EDIT EXPENSE MODAL ===== -->
+    <div id="edit-modal" class="modal hidden">
+      <div class="modal-overlay"></div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Edit Expense</h3>
+          <button class="icon-btn modal-close" aria-label="Close">✕</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="edit-amount">Amount (₹)</label>
+            <input type="number" id="edit-amount" inputmode="decimal" step="0.01">
+          </div>
+          <div class="form-group">
+            <label for="edit-category">Category</label>
+            <select id="edit-category" class="filter-select">
+              <option value="transport">🚕 Transport</option>
+              <option value="food">🍽️ Food</option>
+              <option value="hotel">🏨 Hotel</option>
+              <option value="sightseeing">🎟️ Sightseeing</option>
+              <option value="shopping">🛍️ Shopping</option>
+              <option value="other">📦 Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="edit-desc">Description</label>
+            <input type="text" id="edit-desc" autocomplete="off">
+          </div>
+          <div class="form-group">
+            <label for="edit-date">Date</label>
+            <input type="date" id="edit-date">
+          </div>
+          <div class="edit-actions">
+            <button id="btn-update-expense" class="btn-primary">Update</button>
+            <button id="btn-delete-expense" class="btn-danger">Delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="toast hidden"></div>
+
+    <!-- Loading -->
+    <div id="loading" class="loading hidden">
+      <div class="spinner"></div>
+    </div>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+
+  <!-- App Config & Logic -->
+  <script src="firebase-config.js"></script>
+  <script src="app.js"></script>
+
+  <!-- Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js').catch(() => {});
+    }
+  </script>
+</body>
+</html>
