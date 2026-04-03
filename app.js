@@ -7,12 +7,18 @@
 
   // ---- Constants ----
   const CATEGORIES = {
-    transport: { icon: '🚕', label: 'Transport', color: '#3B82F6' },
-    food:      { icon: '🍽️', label: 'Food',      color: '#F59E0B' },
-    hotel:     { icon: '🏨', label: 'Hotel',     color: '#8B5CF6' },
-    sightseeing: { icon: '🎟️', label: 'Sightseeing', color: '#EC4899' },
-    shopping:  { icon: '🛍️', label: 'Shopping',  color: '#10B981' },
-    other:     { icon: '📦', label: 'Other',     color: '#6B7280' },
+    transport:   { icon: '🚕', label: 'Transport',   color: '#7CB3F5' },
+    food:        { icon: '🍽️', label: 'Food',        color: '#F5C77C' },
+    hotel:       { icon: '🏨', label: 'Hotel',       color: '#B49CF5' },
+    sightseeing: { icon: '🎟️', label: 'Sightseeing', color: '#F5A0C8' },
+    shopping:    { icon: '🛍️', label: 'Shopping',    color: '#7CD4B2' },
+    drinks:      { icon: '☕', label: 'Drinks',      color: '#A8D8EA' },
+    snacks:      { icon: '🍿', label: 'Snacks',      color: '#FFD3B6' },
+    medical:     { icon: '💊', label: 'Medical',     color: '#F5B0B0' },
+    gifts:       { icon: '🎁', label: 'Gifts',       color: '#D4A5F5' },
+    fuel:        { icon: '⛽', label: 'Fuel',        color: '#B8D4A8' },
+    tips:        { icon: '💡', label: 'Tips',        color: '#F5E6A0' },
+    other:       { icon: '📦', label: 'Other',       color: '#C0C0D0' },
   };
 
   // ---- State ----

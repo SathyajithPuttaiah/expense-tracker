@@ -11,40 +11,46 @@
 }
 
 :root {
-  --primary: #4F46E5;
-  --primary-dark: #3730A3;
-  --primary-light: #818CF8;
-  --primary-bg: #EEF2FF;
-  --accent: #F59E0B;
-  --accent-light: #FEF3C7;
-  --danger: #EF4444;
-  --danger-light: #FEE2E2;
-  --success: #10B981;
-  --success-light: #D1FAE5;
-  --bg: #F8FAFC;
+  --primary: #7C8CF5;
+  --primary-dark: #6366B5;
+  --primary-light: #A5B4FC;
+  --primary-bg: #F0F0FF;
+  --accent: #F5C77C;
+  --accent-light: #FFF5E6;
+  --danger: #F5A0A0;
+  --danger-light: #FFF0F0;
+  --success: #7CD4B2;
+  --success-light: #E6FFF5;
+  --bg: #FAFAFE;
   --card: #FFFFFF;
-  --text: #1E293B;
-  --text-secondary: #64748B;
-  --text-muted: #94A3B8;
-  --border: #E2E8F0;
-  --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
-  --shadow-md: 0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.06);
-  --shadow-lg: 0 10px 15px rgba(0,0,0,0.1), 0 4px 6px rgba(0,0,0,0.05);
-  --radius: 12px;
-  --radius-sm: 8px;
-  --radius-lg: 16px;
+  --text: #3D3D5C;
+  --text-secondary: #7A7A9E;
+  --text-muted: #A8A8C0;
+  --border: #E8E8F4;
+  --shadow: 0 2px 8px rgba(124,140,245,0.08), 0 1px 3px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 12px rgba(124,140,245,0.10), 0 2px 4px rgba(0,0,0,0.04);
+  --shadow-lg: 0 12px 24px rgba(124,140,245,0.12), 0 4px 8px rgba(0,0,0,0.04);
+  --radius: 14px;
+  --radius-sm: 10px;
+  --radius-lg: 18px;
   --nav-height: 72px;
   --header-height: 56px;
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
 
-  /* Category Colors */
-  --cat-transport: #3B82F6;
-  --cat-food: #F59E0B;
-  --cat-hotel: #8B5CF6;
-  --cat-sightseeing: #EC4899;
-  --cat-shopping: #10B981;
-  --cat-other: #6B7280;
+  /* Category Colors — Pastels */
+  --cat-transport: #7CB3F5;
+  --cat-food: #F5C77C;
+  --cat-hotel: #B49CF5;
+  --cat-sightseeing: #F5A0C8;
+  --cat-shopping: #7CD4B2;
+  --cat-drinks: #A8D8EA;
+  --cat-snacks: #FFD3B6;
+  --cat-medical: #F5B0B0;
+  --cat-gifts: #D4A5F5;
+  --cat-fuel: #B8D4A8;
+  --cat-tips: #F5E6A0;
+  --cat-other: #C0C0D0;
 }
 
 html {
@@ -89,7 +95,7 @@ input, select, button {
 #setup-screen {
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+  background: linear-gradient(135deg, #B8C6F5 0%, #D4B8F5 50%, #F5C8D4 100%);
   padding: 24px;
   padding-top: calc(24px + var(--safe-top));
 }
@@ -349,7 +355,7 @@ input:focus, select:focus {
 }
 
 .summary-card.total {
-  background: linear-gradient(135deg, #4F46E5, #7C3AED);
+  background: linear-gradient(135deg, #7C8CF5, #B49CF5, #F5A0C8);
   color: white;
   margin-bottom: 12px;
 }
@@ -471,12 +477,18 @@ input:focus, select:focus {
   flex-shrink: 0;
 }
 
-.expense-icon.transport { background: #DBEAFE; }
-.expense-icon.food { background: #FEF3C7; }
-.expense-icon.hotel { background: #EDE9FE; }
-.expense-icon.sightseeing { background: #FCE7F3; }
-.expense-icon.shopping { background: #D1FAE5; }
-.expense-icon.other { background: #F1F5F9; }
+.expense-icon.transport { background: #E0ECFF; }
+.expense-icon.food { background: #FFF2DC; }
+.expense-icon.hotel { background: #EDE0FF; }
+.expense-icon.sightseeing { background: #FFE0EE; }
+.expense-icon.shopping { background: #D8F5E8; }
+.expense-icon.drinks { background: #D8F0FA; }
+.expense-icon.snacks { background: #FFEAD8; }
+.expense-icon.medical { background: #FFE0E0; }
+.expense-icon.gifts { background: #EED8FF; }
+.expense-icon.fuel { background: #E2F0D8; }
+.expense-icon.tips { background: #FFF8D8; }
+.expense-icon.other { background: #EDEDF5; }
 
 .expense-details {
   flex: 1;
@@ -574,7 +586,7 @@ input:focus, select:focus {
 
 .category-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 8px;
 }
 
@@ -924,7 +936,7 @@ hr {
   }
 
   .category-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 10px;
   }
 }
@@ -932,21 +944,21 @@ hr {
 /* ----- Dark mode support ----- */
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #0F172A;
-    --card: #1E293B;
-    --text: #F1F5F9;
-    --text-secondary: #94A3B8;
-    --text-muted: #64748B;
-    --border: #334155;
-    --primary-bg: #312E81;
-    --danger-light: #450A0A;
-    --shadow: 0 1px 3px rgba(0,0,0,0.3);
-    --shadow-md: 0 4px 6px rgba(0,0,0,0.3);
-    --shadow-lg: 0 10px 15px rgba(0,0,0,0.4);
+    --bg: #151520;
+    --card: #1E1E30;
+    --text: #E8E8F0;
+    --text-secondary: #9898B8;
+    --text-muted: #6868888;
+    --border: #2E2E48;
+    --primary-bg: #2A2A50;
+    --danger-light: #3A1A1A;
+    --shadow: 0 2px 8px rgba(0,0,0,0.3);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.3);
+    --shadow-lg: 0 12px 24px rgba(0,0,0,0.4);
   }
 
   .summary-card.total {
-    background: linear-gradient(135deg, #3730A3, #5B21B6);
+    background: linear-gradient(135deg, #5A6AD0, #8A6CC0, #C07090);
   }
 
   .nav-icon.add-icon {
