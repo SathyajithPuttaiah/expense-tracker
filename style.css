@@ -333,7 +333,7 @@ input:focus, select:focus {
 
 .view-content {
   padding: 20px;
-  padding-bottom: 24px;
+  padding-bottom: calc(24px + var(--nav-height) + var(--safe-bottom));
 }
 
 .view-title {
