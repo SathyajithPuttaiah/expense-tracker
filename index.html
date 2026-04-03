@@ -65,9 +65,10 @@
 
       <!-- Top Header -->
       <header id="app-header">
-        <div class="header-left">
+        <div class="header-left" id="btn-trip-switcher" role="button">
           <h2 id="header-trip-name">Trip</h2>
           <span id="header-trip-code" class="trip-code-badge"></span>
+          <span class="header-chevron">▾</span>
         </div>
         <button id="btn-settings" class="icon-btn" aria-label="Settings">⚙️</button>
       </header>
@@ -291,6 +292,24 @@
           <span class="nav-label">Charts</span>
         </button>
       </nav>
+    </div>
+
+    <!-- ===== TRIPS MODAL ===== -->
+    <div id="trips-modal" class="modal hidden">
+      <div class="modal-overlay"></div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>My Trips</h3>
+          <button class="icon-btn modal-close" aria-label="Close">✕</button>
+        </div>
+        <div class="modal-body">
+          <div id="trips-list" class="trips-list"></div>
+          <div class="trips-actions">
+            <button id="btn-modal-new-trip" class="btn-secondary">🆕 Create New Trip</button>
+            <button id="btn-modal-join-trip" class="btn-secondary">🔗 Join Trip by Code</button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- ===== SETTINGS MODAL ===== -->

@@ -88,6 +88,37 @@
       members: state.members,
       budget: state.budget,
     }));
+    saveTripToHistory();
+  }
+
+  function saveTripToHistory() {
+    const history = getTripHistory();
+    const idx = history.findIndex(t => t.tripCode === state.tripCode);
+    const entry = {
+      tripCode: state.tripCode,
+      tripName: state.tripName,
+      userName: state.userName,
+      members: state.members,
+    };
+    if (idx >= 0) {
+      history[idx] = entry;
+    } else {
+      history.unshift(entry);
+    }
+    localStorage.setItem('tripsplit_history', JSON.stringify(history));
+  }
+
+  function getTripHistory() {
+    try {
+      return JSON.parse(localStorage.getItem('tripsplit_history') || '[]');
+    } catch {
+      return [];
+    }
+  }
+
+  function removeTripFromHistory(tripCode) {
+    const history = getTripHistory().filter(t => t.tripCode !== tripCode);
+    localStorage.setItem('tripsplit_history', JSON.stringify(history));
   }
 
   function loadState() {
@@ -638,6 +669,29 @@
       openEditModal(expense);
     });
 
+    // Trip switcher
+    $('#btn-trip-switcher').addEventListener('click', openTripSwitcher);
+
+    // Trip switcher actions
+    $('#btn-modal-new-trip').addEventListener('click', () => {
+      $('#trips-modal').classList.add('hidden');
+      if (confirm('Start a new trip? You can switch back to this trip anytime.')) {
+        if (unsubscribeExpenses) unsubscribeExpenses();
+        localStorage.removeItem('tripsplit_state');
+        location.reload();
+      }
+    });
+
+    $('#btn-modal-join-trip').addEventListener('click', () => {
+      $('#trips-modal').classList.add('hidden');
+      if (confirm('Join another trip? You can switch back to this trip anytime.')) {
+        if (unsubscribeExpenses) unsubscribeExpenses();
+        localStorage.setItem('tripsplit_open_join', 'true');
+        localStorage.removeItem('tripsplit_state');
+        location.reload();
+      }
+    });
+
     // Settings
     $('#btn-settings').addEventListener('click', openSettings);
 
@@ -738,6 +792,78 @@
     $('#edit-desc').value = expense.description || '';
     $('#edit-date').value = expense.date;
     $('#edit-modal').classList.remove('hidden');
+  }
+
+  function openTripSwitcher() {
+    const history = getTripHistory();
+    const container = $('#trips-list');
+
+    if (history.length === 0) {
+      container.innerHTML = '<div class="trips-empty">No trips yet. Create one to get started!</div>';
+    } else {
+      container.innerHTML = history.map(trip => {
+        const isActive = trip.tripCode === state.tripCode;
+        return `
+          <div class="trip-item ${isActive ? 'active-trip' : ''}" data-code="${trip.tripCode}">
+            <div class="trip-item-icon">${isActive ? '✈️' : '🗂️'}</div>
+            <div class="trip-item-details">
+              <div class="trip-item-name">${escapeHtml(trip.tripName)}</div>
+              <div class="trip-item-meta">${trip.members ? trip.members.join(', ') : trip.userName}</div>
+            </div>
+            <span class="trip-item-badge">${trip.tripCode}</span>
+            ${isActive ? '<span class="active-label">Active</span>' : ''}
+          </div>
+        `;
+      }).join('');
+
+      // Trip item click handler
+      container.querySelectorAll('.trip-item:not(.active-trip)').forEach(item => {
+        item.addEventListener('click', () => {
+          switchToTrip(item.dataset.code);
+        });
+      });
+    }
+
+    $('#trips-modal').classList.remove('hidden');
+  }
+
+  async function switchToTrip(tripCode) {
+    showLoading(true);
+    try {
+      const history = getTripHistory();
+      const trip = history.find(t => t.tripCode === tripCode);
+      if (!trip) {
+        showToast('Trip not found in history');
+        showLoading(false);
+        return;
+      }
+
+      // Verify from Firestore
+      const doc = await db.collection('trips').doc(tripCode).get();
+      if (!doc.exists) {
+        showToast('Trip no longer exists in the cloud');
+        removeTripFromHistory(tripCode);
+        showLoading(false);
+        return;
+      }
+
+      const data = doc.data();
+      if (unsubscribeExpenses) unsubscribeExpenses();
+
+      state.tripCode = tripCode;
+      state.tripName = data.name;
+      state.userName = trip.userName;
+      state.members = data.members;
+      state.budget = data.budget || 0;
+      saveState();
+
+      $('#trips-modal').classList.add('hidden');
+      initMainApp();
+      showToast(`Switched to "${data.name}"`);
+    } catch (err) {
+      showToast('Error: ' + err.message);
+    }
+    showLoading(false);
   }
 
   function openSettings() {

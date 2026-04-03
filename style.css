@@ -301,6 +301,22 @@ input:focus, select:focus {
   display: flex;
   align-items: center;
   gap: 10px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  padding: 4px 8px;
+  margin: -4px -8px;
+  border-radius: var(--radius-sm);
+  transition: background 0.2s;
+}
+
+.header-left:active {
+  background: rgba(0,0,0,0.05);
+}
+
+.header-chevron {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-left: -4px;
 }
 
 #app-header h2 {
@@ -869,6 +885,110 @@ hr {
   border: none;
   border-top: 1px solid var(--border);
   margin: 16px 0;
+}
+
+/* ----- Trips List ----- */
+.trips-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.trip-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: transform 0.1s, background 0.2s;
+  -webkit-tap-highlight-color: transparent;
+  border: 2px solid transparent;
+}
+
+.trip-item:active {
+  transform: scale(0.98);
+}
+
+.trip-item.active-trip {
+  border-color: var(--primary-light);
+  background: var(--primary-bg);
+}
+
+.trip-item-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--primary-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.trip-item.active-trip .trip-item-icon {
+  background: var(--primary);
+}
+
+.trip-item-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.trip-item-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.trip-item-meta {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.trip-item-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--primary);
+  background: var(--primary-bg);
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-family: 'SF Mono', 'Menlo', monospace;
+  letter-spacing: 1px;
+}
+
+.trip-item.active-trip .trip-item-badge {
+  background: rgba(124,140,245,0.2);
+}
+
+.active-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: white;
+  background: var(--primary);
+  padding: 2px 8px;
+  border-radius: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.trips-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.trips-empty {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 20px;
+  font-size: 0.9rem;
 }
 
 /* ----- Toast ----- */
