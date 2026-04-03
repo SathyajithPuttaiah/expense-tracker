@@ -661,6 +661,26 @@
     // Export
     $('#btn-export').addEventListener('click', exportData);
 
+    // Start new trip
+    $('#btn-new-trip').addEventListener('click', () => {
+      if (confirm('Start a new trip? You can always rejoin this trip later using the code: ' + state.tripCode)) {
+        if (unsubscribeExpenses) unsubscribeExpenses();
+        localStorage.removeItem('tripsplit_state');
+        location.reload();
+        // Will land on setup screen with "New Trip" tab active
+      }
+    });
+
+    // Switch / join another trip
+    $('#btn-switch-trip').addEventListener('click', () => {
+      if (confirm('Switch to another trip? You can rejoin this trip later using the code: ' + state.tripCode)) {
+        if (unsubscribeExpenses) unsubscribeExpenses();
+        localStorage.setItem('tripsplit_open_join', 'true');
+        localStorage.removeItem('tripsplit_state');
+        location.reload();
+      }
+    });
+
     // Leave trip
     $('#btn-leave-trip').addEventListener('click', () => {
       if (confirm('Leave this trip? Your local session will be cleared. Expenses will remain in the cloud.')) {
@@ -798,6 +818,13 @@
     if (loadState() && state.tripCode) {
       // Returning user - go straight to app
       initMainApp();
+    } else if (localStorage.getItem('tripsplit_open_join')) {
+      // User wants to switch/join another trip
+      localStorage.removeItem('tripsplit_open_join');
+      $$('.setup-tab').forEach(t => t.classList.remove('active'));
+      $$('.tab-content').forEach(t => t.classList.remove('active'));
+      $('[data-tab="join"]').classList.add('active');
+      $('#join-tab').classList.add('active');
     }
     // else stay on setup screen
   }
