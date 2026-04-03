@@ -811,15 +811,30 @@
               <div class="trip-item-meta">${trip.members ? trip.members.join(', ') : trip.userName}</div>
             </div>
             <span class="trip-item-badge">${trip.tripCode}</span>
-            ${isActive ? '<span class="active-label">Active</span>' : ''}
+            ${isActive ? '<span class="active-label">Active</span>' : `<button class="trip-delete-btn" data-code="${trip.tripCode}" aria-label="Delete">&times;</button>`}
           </div>
         `;
       }).join('');
 
-      // Trip item click handler
+      // Trip item click handler (tap on the item, not the delete button)
       container.querySelectorAll('.trip-item:not(.active-trip)').forEach(item => {
-        item.addEventListener('click', () => {
+        item.addEventListener('click', (e) => {
+          if (e.target.closest('.trip-delete-btn')) return;
           switchToTrip(item.dataset.code);
+        });
+      });
+
+      // Delete button handler
+      container.querySelectorAll('.trip-delete-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const code = btn.dataset.code;
+          const trip = history.find(t => t.tripCode === code);
+          if (confirm(`Remove "${trip ? trip.tripName : code}" from your trips list?\n\nThis only removes it from your device. The trip data stays in the cloud.`)) {
+            removeTripFromHistory(code);
+            openTripSwitcher(); // Re-render
+            showToast('Trip removed from list');
+          }
         });
       });
     }

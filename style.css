@@ -967,6 +967,29 @@ hr {
   background: rgba(124,140,245,0.2);
 }
 
+.trip-delete-btn {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: var(--danger-light);
+  color: var(--danger);
+  border-radius: 50%;
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.1s;
+  line-height: 1;
+}
+
+.trip-delete-btn:active {
+  transform: scale(0.9);
+}
+
 .active-label {
   font-size: 0.65rem;
   font-weight: 700;
